@@ -23,6 +23,7 @@ dependencies {
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("info.picocli:picocli:4.7.5")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.17.0")
+    implementation("org.hildan.checkstyle:checkstyle-config:2.5.0")
     testImplementation(platform("org.junit:junit-bom:5.10.1"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
 }
@@ -37,6 +38,9 @@ tasks.test {
         // showCauses = true
         showStandardStreams = true
     }
+}
+tasks.withType<JavaCompile> {
+    options.compilerArgs.add("-Xlint:unchecked")
 }
 
 tasks.jacocoTestReport { reports { xml.required.set(true) } }

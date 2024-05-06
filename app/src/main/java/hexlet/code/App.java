@@ -1,18 +1,11 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import java.io.File;
-import java.util.Map;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import hexlet.code.ConfigDto;
-import com.fasterxml.jackson.core.type.TypeReference;
-
+import static hexlet.code.Differ.generate;
 
 
 @Command(name = "gendiff", mixinStandardHelpOptions = true, version = "checksum 4.0",
@@ -31,25 +24,10 @@ public class App implements Runnable {
     }
     @Override
     public void run() { // your business logic goes here...
-        System.out.println("Hello World!");
         try {
-            ConfigDto file1 = readJson(filepath1);
-            ConfigDto file2 = readJson(filepath1);
-            System.out.println(ConfigDto.differ(file1, file2));
-//            System.out.println(readJson(filepath1));
+            System.out.println(generate(filepath1, filepath2));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static ConfigDto readJson(File file) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        ConfigDto jsonFile = mapper.readValue(filepath1, ConfigDto.class);
-//        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-//        String showJson = mapper.writeValueAsString(jsonFile1);
-
-//        Map<String, ConfigDto> jsonMap1 = mapper.readValue(filepath1, typeRef);
-
-        return jsonFile;
     }
 }
