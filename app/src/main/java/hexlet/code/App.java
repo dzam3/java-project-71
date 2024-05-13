@@ -13,7 +13,7 @@ import static hexlet.code.Differ.generate;
 public class App implements Runnable {
 
     @Parameters(index = "0", description = "path to first file")
-    private static File filepath1;
+    private File filepath1;
     @Parameters(index = "1", description = "path to second file")
     private File filepath2;
     @Option(names = {"-f", "--format"}, description = "output format [default: stylish]")
