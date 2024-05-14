@@ -22,6 +22,7 @@ jobs:
       #   run: chmod +x ./gradlew
         
       - run: /home/runner/work/java-project-71/java-project-71/app/gradlew build
+        working-directory: /home/runner/work/java-project-71/java-project-71/app
 
       - name: Publish code coverage
         uses: paambaati/codeclimate-action@v5.0.0
@@ -31,4 +32,5 @@ jobs:
         with:
           coverageCommand: make report
           coverageLocations: ${{github.workspace}}/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
+          working-directory: /home/runner/work/java-project-71/java-project-71/app
 
