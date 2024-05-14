@@ -20,8 +20,9 @@ jobs:
           
       # - name: Grant execute permission for gradlew
       #   run: chmod +x ./gradlew
+      - run: cd app
       - run: pwd
-      # - run: /home/runner/work/java-project-71/java-project-71/app/gradlew build
+      - run: ./gradlew build
       
 
       - name: Publish code coverage
