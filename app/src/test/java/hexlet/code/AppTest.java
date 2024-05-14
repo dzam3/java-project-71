@@ -15,8 +15,8 @@ public class AppTest {
     private static File testFile2;
     @BeforeAll
     public static void beforeAll() {
-        testFile1 = new File("./testFile1");
-        testFile2 = new File("./testFile2");
+        testFile1 = new File("./src/test/resources/testFile1");
+        testFile2 = new File("./src/test/resources/testFile2");
         System.out.println(testFile1.getAbsolutePath());
 
         String testFileContent1 = "{\n"
