@@ -20,9 +20,9 @@ jobs:
           
       # - name: Grant execute permission for gradlew
       #   run: chmod +x ./gradlew
-        
-      - run: /home/runner/work/java-project-71/java-project-71/app/gradlew build
-        working-directory: /home/runner/work/java-project-71/java-project-71/app
+      - run: pwd
+      # - run: /home/runner/work/java-project-71/java-project-71/app/gradlew build
+      
 
       - name: Publish code coverage
         uses: paambaati/codeclimate-action@v5.0.0
