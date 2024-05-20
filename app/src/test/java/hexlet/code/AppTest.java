@@ -4,11 +4,12 @@ package hexlet.code;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 
 import static hexlet.code.Differ.generate;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AppTest {
     private final File testFile1 = Path.of("src/test/resources/testFile1").toFile();

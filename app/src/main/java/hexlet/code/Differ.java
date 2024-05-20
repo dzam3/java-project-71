@@ -1,7 +1,6 @@
 package hexlet.code;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 import java.io.File;
@@ -68,8 +67,7 @@ public class Differ {
         } catch (IndexOutOfBoundsException e) {
             throw new RuntimeException("File extension is not supported. Supported extensions:"
                     + " .json, .yaml, .yml");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

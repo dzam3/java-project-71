@@ -44,8 +44,11 @@ tasks.test {
         showStandardStreams = true
     }
 }
-//tasks.withType<JavaCompile> {
-//    options.compilerArgs.add("-Xlint:unchecked")
-//}
+tasks.withType<JavaCompile> {
+    options.compilerArgs.add("-Xlint:unchecked")
+}
 
-tasks.jacocoTestReport { reports { xml.required.set(true) } }
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports { xml.required.set(true) }
+}
