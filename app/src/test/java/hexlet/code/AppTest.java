@@ -1,11 +1,11 @@
 package hexlet.code;
 
-import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import static hexlet.code.Differ.generate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,31 +13,40 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AppTest {
     private static File testFile1;
     private static File testFile2;
-    @BeforeAll
-    public static void beforeAll() {
-        testFile1 = new File("testFile1");
-        testFile2 = new File("testFile2");
-        System.out.println(testFile1.getAbsolutePath());
+    private static File testJson1;
+    private static File testJson2;
 
-        String testFileContent1 = "{\n"
-                + "  \"host\": \"hexlet.io\",\n"
-                + "  \"timeout\": 50,\n"
-                + "  \"proxy\": \"123.234.53.22\",\n"
-                + "  \"follow\": false\n"
-                + "}\n";
-        String testFileContent2 = "{\n"
-                + "  \"timeout\": 20,\n"
-                + "  \"verbose\": true,\n"
-                + "  \"host\": \"hexlet.io\"\n"
-                + "}\n";
-        try (FileWriter writer1 = new FileWriter(testFile1);
-             FileWriter writer2 = new FileWriter(testFile2)) {
-            writer1.write(testFileContent1);
-            writer2.write(testFileContent2);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public AppTest() {
+        this.testFile1 = Path.of("src/test/resources/testFile1").toFile();
+        this.testFile2 = Path.of("src/test/resources/testFile1").toFile();
+        this.testJson1 = Path.of("src/test/resources/file1.json").toFile();
+        this.testJson2 = Path.of("src/test/resources/file2.json").toFile();
     }
+//    @BeforeAll
+//    public static void beforeAll() {
+//        testFile1 = new File("testFile1");
+//        testFile2 = new File("testFile2");
+//        System.out.println(testFile1.getAbsolutePath());
+//
+//        String testFileContent1 = "{\n"
+//                + "  \"host\": \"hexlet.io\",\n"
+//                + "  \"timeout\": 50,\n"
+//                + "  \"proxy\": \"123.234.53.22\",\n"
+//                + "  \"follow\": false\n"
+//                + "}\n";
+//        String testFileContent2 = "{\n"
+//                + "  \"timeout\": 20,\n"
+//                + "  \"verbose\": true,\n"
+//                + "  \"host\": \"hexlet.io\"\n"
+//                + "}\n";
+//        try (FileWriter writer1 = new FileWriter(testFile1);
+//             FileWriter writer2 = new FileWriter(testFile2)) {
+//            writer1.write(testFileContent1);
+//            writer2.write(testFileContent2);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
     @Test
     public void testGenerate() {
         String expected = "{\n"
@@ -49,8 +58,9 @@ public class AppTest {
                 + "  + verbose: true\n"
                 + "}";
         String actual = generate(testFile1, testFile2);
-
         assertEquals(expected, actual);
     }
+
+
 
 }
