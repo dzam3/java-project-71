@@ -1,6 +1,7 @@
 package hexlet.code;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 import java.io.File;
@@ -11,12 +12,14 @@ import java.util.TreeMap;
 
 public class Differ {
     static final List<String> YAML_EXT = List.of(".yaml", ".yml");
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> readJson(File file) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> jsonMap = mapper.readValue(file, Map.class);
         return jsonMap;
     }
 
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> readYaml(File file) throws Exception {
         ObjectMapper mapper = new YAMLMapper();
         Map<String, Object> yamlMap = mapper.readValue(file, Map.class);
@@ -28,7 +31,6 @@ public class Differ {
             Map<String, Object> jointMap = new TreeMap<>();
             String fileName1 = file1.getName().toLowerCase();
             String fileName2 = file2.getName().toLowerCase();
-            System.out.println(fileName1);
             String ext1 = fileName1.substring(fileName1.indexOf('.'));
             String ext2 = fileName2.substring(fileName2.indexOf('.'));
             Map<String, Object> map1 = new HashMap<>();
@@ -41,8 +43,8 @@ public class Differ {
                 map1.putAll(readJson(file1));
                 map2.putAll(readJson(file2));
             } else {
-                throw new RuntimeException("File extension is not supported. Supported extensions: \".json\", "
-                        + YAML_EXT);
+                throw new RuntimeException("File extension is not supported. Supported extensions:"
+                        + " .json, .yaml, .yml");
             }
 
             jointMap.putAll(map1);
@@ -63,7 +65,11 @@ public class Differ {
             });
             result.append("}");
             return result.toString();
-        } catch (Exception e) {
+        } catch (IndexOutOfBoundsException e) {
+            throw new RuntimeException("File extension is not supported. Supported extensions:"
+                    + " .json, .yaml, .yml");
+        }
+        catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

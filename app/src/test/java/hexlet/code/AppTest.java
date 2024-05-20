@@ -8,21 +8,18 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import static hexlet.code.Differ.generate;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AppTest {
-    private static File testFile1;
-    private static File testFile2;
-    private static File testJson1;
-    private static File testJson2;
+    private final File testFile1 = Path.of("src/test/resources/testFile1").toFile();
+    private final File testFile2 = Path.of("src/test/resources/testFile2").toFile();
+    private final File testJson1 = Path.of("src/test/resources/file1.json").toFile();
+    private final File testJson2 = Path.of("src/test/resources/file2.json").toFile();
+    private final File emptyFile1 = Path.of("src/test/resources/emptyFile1.json").toFile();
+    private final File emptyFile2 = Path.of("src/test/resources/emptyFile2.json").toFile();
 
-    public AppTest() {
-        this.testFile1 = Path.of("src/test/resources/testFile1").toFile();
-        this.testFile2 = Path.of("src/test/resources/testFile1").toFile();
-        this.testJson1 = Path.of("src/test/resources/file1.json").toFile();
-        this.testJson2 = Path.of("src/test/resources/file2.json").toFile();
-    }
-//    @BeforeAll
+
+    //    @BeforeAll
 //    public static void beforeAll() {
 //        testFile1 = new File("testFile1");
 //        testFile2 = new File("testFile2");
@@ -48,7 +45,7 @@ public class AppTest {
 //        }
 //    }
     @Test
-    public void testGenerate() {
+    public void testGenerateJson() {
         String expected = "{\n"
                 + "  - follow: false\n"
                 + "    host: hexlet.io\n"
@@ -57,10 +54,24 @@ public class AppTest {
                 + "  + timeout: 20\n"
                 + "  + verbose: true\n"
                 + "}";
-        String actual = generate(testFile1, testFile2);
+        String actual = generate(testJson1, testJson2);
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void testMissingExtension() {
+        Exception thrown = assertThrows(RuntimeException.class, () -> generate(testFile1, testFile2)
+        );
+        String expectedMessage = "File extension is not supported. Supported extensions:"
+                + " .json, .yaml, .yml";
+        String actualMessage = thrown.getMessage();
+        System.out.println(actualMessage);
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
 
-
+    @Test
+    public void testEmptyFiles() {
+        Exception thrown = assertThrows(RuntimeException.class, () -> generate(emptyFile1, emptyFile2)
+        );
+    }
 }
