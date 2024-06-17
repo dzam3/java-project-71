@@ -1,37 +1,26 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static hexlet.code.Parser.readJson;
+import static hexlet.code.Parser.readYaml;
+
 public class Differ {
     static final List<String> YAML_EXT = List.of(".yaml", ".yml");
-    @SuppressWarnings("unchecked")
-    public static Map<String, Object> readJson(File file) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> jsonMap = mapper.readValue(file, Map.class);
-        return jsonMap;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static Map<String, Object> readYaml(File file) throws Exception {
-        ObjectMapper mapper = new YAMLMapper();
-        Map<String, Object> yamlMap = mapper.readValue(file, Map.class);
-        return yamlMap;
-    }
 
     public static String generate(File file1, File file2) {
         try {
             Map<String, Object> jointMap = new TreeMap<>();
             String fileName1 = file1.getName().toLowerCase();
             String fileName2 = file2.getName().toLowerCase();
-            String ext1 = fileName1.substring(fileName1.indexOf('.'));
-            String ext2 = fileName2.substring(fileName2.indexOf('.'));
+
+            String ext1 = getFileExtension(fileName1);
+            String ext2 = getFileExtension(fileName2);
+
             Map<String, Object> map1 = new HashMap<>();
             Map<String, Object> map2 = new HashMap<>();
 
@@ -52,23 +41,29 @@ public class Differ {
 
             jointMap.forEach((key, value) -> {
                 if (value.equals(map1.get(key)) && value.equals(map2.get(key))) {
-                    result.append("    " + key + ": " + value + "\n");
+                    result.append("    ").append(key).append(": ").append(value).append("\n");
                 } else if (!map1.containsKey(key)) {
-                    result.append("  + " + key + ": " + value + "\n");
+                    result.append("  + ").append(key).append(": ").append(value).append("\n");
                 } else if (!map2.containsKey(key)) {
-                    result.append("  - " + key + ": " + value + "\n");
+                    result.append("  - ").append(key).append(": ").append(value).append("\n");
                 } else if (!value.equals(map1.get(key)) && value.equals(map2.get(key))) {
-                    result.append("  - " + key + ": " + map1.get(key) + "\n");
-                    result.append("  + " + key + ": " + value + "\n");
+                    result.append("  - ").append(key).append(": ").append(map1.get(key)).append("\n");
+                    result.append("  + ").append(key).append(": ").append(value).append("\n");
                 }
             });
             result.append("}");
             return result.toString();
-        } catch (IndexOutOfBoundsException e) {
-            throw new RuntimeException("File extension is not supported. Supported extensions:"
-                    + " .json, .yaml, .yml");
+        } catch (RuntimeException e) {
+            throw e; // Rethrow RuntimeExceptions to preserve their messages
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("File extension is not supported. Supported extensions: .json, .yaml, .yml");
         }
+    }
+    private static String getFileExtension(String fileName) {
+        int index = fileName.lastIndexOf('.');
+        if (index == -1) {
+            throw new RuntimeException("File extension is not supported. Supported extensions: .json, .yaml, .yml");
+        }
+        return fileName.substring(index);
     }
 }
