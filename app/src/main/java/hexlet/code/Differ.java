@@ -1,20 +1,17 @@
 package hexlet.code;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
+import static hexlet.code.Formatter.formatDiff;
 import static hexlet.code.Parser.readJson;
 import static hexlet.code.Parser.readYaml;
 
 public class Differ {
     static final List<String> YAML_EXT = List.of(".yaml", ".yml");
 
-    public static String generate(File file1, File file2) {
+    public static String generate(File file1, File file2, String format) {
         try {
-            Map<String, Object> jointMap = new TreeMap<>();
             String fileName1 = file1.getName().toLowerCase();
             String fileName2 = file2.getName().toLowerCase();
 
@@ -35,24 +32,7 @@ public class Differ {
                         + " .json, .yaml, .yml");
             }
 
-            jointMap.putAll(map1);
-            jointMap.putAll(map2);
-            StringBuilder result = new StringBuilder("{\n");
-
-            jointMap.forEach((key, value) -> {
-                if (value.equals(map1.get(key)) && value.equals(map2.get(key))) {
-                    result.append("    ").append(key).append(": ").append(value).append("\n");
-                } else if (!map1.containsKey(key)) {
-                    result.append("  + ").append(key).append(": ").append(value).append("\n");
-                } else if (!map2.containsKey(key)) {
-                    result.append("  - ").append(key).append(": ").append(value).append("\n");
-                } else if (!value.equals(map1.get(key)) && value.equals(map2.get(key))) {
-                    result.append("  - ").append(key).append(": ").append(map1.get(key)).append("\n");
-                    result.append("  + ").append(key).append(": ").append(value).append("\n");
-                }
-            });
-            result.append("}");
-            return result.toString();
+            return formatDiff(map1, map2, format);
         } catch (RuntimeException e) {
             throw e; // Rethrow RuntimeExceptions to preserve their messages
         } catch (Exception e) {

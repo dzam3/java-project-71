@@ -16,8 +16,8 @@ public class App implements Runnable {
     private File filepath1;
     @Parameters(index = "1", description = "path to second file")
     private File filepath2;
-    @Option(names = {"-f", "--format"}, description = "output format [default: stylish]")
-    private String format = "stylish";
+    @Option(names = {"-f", "--format"}, defaultValue = "stylish", description = "output format [default: ${DEFAULT-VALUE}]")
+    private String format;
 
     public static void main(String[] args) {
         new CommandLine(new App()).execute(args);
@@ -25,7 +25,7 @@ public class App implements Runnable {
     @Override
     public void run() { // your business logic goes here...
         try {
-            System.out.println(generate(filepath1, filepath2));
+            System.out.println(generate(filepath1, filepath2, format));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
