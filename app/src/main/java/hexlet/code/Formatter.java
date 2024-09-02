@@ -1,34 +1,35 @@
 package hexlet.code;
 
+import static hexlet.code.Differ.diff;
+
+import java.io.File;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
 
 public class Formatter {
-    public static String formatDiff(Map<String, Object> map1, Map<String, Object> map2, String format) {
+    public static String formatDiff(File file1, File file2, String format) {
+        List<Map<String, Object>> difference;
+        difference = diff(file1, file2);
+
         StringBuilder result = new StringBuilder("{\n");
-        Map<String, Object> jointMap = new TreeMap<>();
-
-        jointMap.putAll(map1);
-        jointMap.putAll(map2);
         if (format.equals("stylish")) {
-            jointMap.forEach((key, value) -> {
-                Object value1 = map1.get(key);
-                Object value2 = map2.get(key);
-
-                if (Objects.equals(value, value1) && Objects.equals(value, value2)) {
+            difference.forEach(item -> {
+                Object key = item.get("key");
+                Object value = item.get("value");
+                if (item.get("type").equals("no change")) {
                     result.append("    ").append(key).append(": ").append(value).append("\n");
-                } else if (!map1.containsKey(key)) {
+                } else if (item.get("type").equals("added")) {
                     result.append("  + ").append(key).append(": ").append(value).append("\n");
-                } else if (!map2.containsKey(key)) {
+                } else if (item.get("type").equals("removed")) {
                     result.append("  - ").append(key).append(": ").append(value).append("\n");
                 } else {
-                    result.append("  - ").append(key).append(": ").append(value1).append("\n");
-                    result.append("  + ").append(key).append(": ").append(value).append("\n");
+                    result.append("  - ").append(key).append(": ").append(item.get("value1")).append("\n");
+                    result.append("  + ").append(key).append(": ").append(item.get("value2")).append("\n");
                 }
             });
-            result.append("}");
         }
-        return result.toString();
+        result.append("}");
+
+        return String.valueOf(result);
     }
 }

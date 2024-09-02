@@ -1,16 +1,21 @@
 package hexlet.code;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.Objects;
 
-import static hexlet.code.Formatter.formatDiff;
+
 import static hexlet.code.Parser.readJson;
 import static hexlet.code.Parser.readYaml;
 
 public class Differ {
     static final List<String> YAML_EXT = List.of(".yaml", ".yml");
 
-    public static String generate(File file1, File file2, String format) {
+    public static List<Map<String, Object>> diff(File file1, File file2) {
         try {
             String fileName1 = file1.getName().toLowerCase();
             String fileName2 = file2.getName().toLowerCase();
@@ -32,7 +37,44 @@ public class Differ {
                         + " .json, .yaml, .yml");
             }
 
-            return formatDiff(map1, map2, format);
+            Map<String, Object> jointMap = new TreeMap<>();
+            List<Map<String, Object>> result = new ArrayList<>();
+
+            jointMap.putAll(map1);
+            jointMap.putAll(map2);
+
+            jointMap.forEach((key, value) -> {
+                Map<String, Object> node = new HashMap<>();
+                Object value1 = map1.get(key);
+                Object value2 = map2.get(key);
+
+                if (Objects.equals(value, value1) && Objects.equals(value, value2)) {
+                    node.put("key", key);
+                    node.put("type", "no change");
+                    node.put("value", value);
+                    result.add(node);
+                } else if (!map1.containsKey(key)) {
+                    node.put("key", key);
+                    node.put("type", "added");
+                    node.put("value", value2);
+                    result.add(node);
+                } else if (!map2.containsKey(key)) {
+                    node.put("key", key);
+                    node.put("type", "removed");
+                    node.put("value", value1);
+                    result.add(node);
+                } else {
+                    node.put("key", key);
+                    node.put("type", "changed");
+                    node.put("value1", value1);
+                    node.put("value2", value2);
+                    result.add(node);
+                }
+
+            });
+
+            return result;
+
         } catch (RuntimeException e) {
             throw e; // Rethrow RuntimeExceptions to preserve their messages
         } catch (Exception e) {

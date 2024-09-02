@@ -5,7 +5,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import java.io.File;
-import static hexlet.code.Differ.generate;
+import static hexlet.code.Formatter.formatDiff;
 
 
 @Command(name = "gendiff", mixinStandardHelpOptions = true, version = "checksum 4.0",
@@ -16,16 +16,20 @@ public class App implements Runnable {
     private File filepath1;
     @Parameters(index = "1", description = "path to second file")
     private File filepath2;
-    @Option(names = {"-f", "--format"}, defaultValue = "stylish", description = "output format [default: ${DEFAULT-VALUE}]")
+    @Option(
+            names = {"-f", "--format"},
+            defaultValue = "stylish",
+            description = "output format [default: ${DEFAULT-VALUE}]"
+    )
     private String format;
 
     public static void main(String[] args) {
         new CommandLine(new App()).execute(args);
     }
     @Override
-    public void run() { // your business logic goes here...
+    public void run() {
         try {
-            System.out.println(generate(filepath1, filepath2, format));
+            System.out.println(formatDiff(filepath1, filepath2, format));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

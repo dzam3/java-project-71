@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.nio.file.Path;
 
-import static hexlet.code.Differ.generate;
+import static hexlet.code.Formatter.formatDiff;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,13 +32,13 @@ public class AppTest {
                   + timeout: 20
                   + verbose: true
                 }""";
-        String actual = generate(testJson1, testJson2, "stylish");
+        String actual = formatDiff(testJson1, testJson2, "stylish");
         assertEquals(expected, actual);
     }
 
     @Test
     public void testGenerateYaml() {
-        String expected = """ 
+        String expected = """
                 {
                     chars1: [a, b, c]
                   - chars2: [d, e, f]
@@ -64,12 +64,12 @@ public class AppTest {
                   - setting3: true
                   + setting3: none
                 }""";
-        String actual = generate(testFile3, testFile4, "stylish");
+        String actual = formatDiff(testFile3, testFile4, "stylish");
         assertEquals(expected, actual);
     }
     @Test
     public void testMissingExtension() {
-        Exception thrown = assertThrows(RuntimeException.class, () -> generate(testFile1, testFile2, "stylish")
+        Exception thrown = assertThrows(RuntimeException.class, () -> formatDiff(testFile1, testFile2, "stylish")
         );
         String expectedMessage = "File extension is not supported. Supported extensions:"
                 + " .json, .yaml, .yml";
@@ -79,7 +79,7 @@ public class AppTest {
 
     @Test
     public void testEmptyFiles() {
-        Exception thrown = assertThrows(RuntimeException.class, () -> generate(emptyFile1, emptyFile2, "stylish")
+        Exception thrown = assertThrows(RuntimeException.class, () -> formatDiff(emptyFile1, emptyFile2, "stylish")
         );
         String expectedMessage = "File(s) is empty. Please provide a file with"
                 + " JSON or YAML data formats";
