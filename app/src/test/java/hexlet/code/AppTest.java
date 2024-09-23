@@ -4,6 +4,7 @@ package hexlet.code;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 
 import static hexlet.code.Formatter.formatDiff;
@@ -22,7 +23,7 @@ public class AppTest {
     private final File testFile4 = Path.of("src/test/resources/file4.yml").toFile();
 
     @Test
-    public void testGenerateJson() {
+    public void testGenerateJson() throws UnsupportedFileExtensionException, ParsingException, IOException {
         String expected = """
                 {
                   - follow: false
@@ -37,7 +38,7 @@ public class AppTest {
     }
 
     @Test
-    public void testGenerateYaml() {
+    public void testGenerateYaml() throws UnsupportedFileExtensionException, ParsingException, IOException {
         String expected = """
                 {
                     chars1: [a, b, c]
@@ -69,7 +70,7 @@ public class AppTest {
     }
     @Test
     public void testMissingExtension() {
-        Exception thrown = assertThrows(RuntimeException.class, () -> formatDiff(testFile1, testFile2, "stylish")
+        Exception thrown = assertThrows(UnsupportedFileExtensionException.class, () -> formatDiff(testFile1, testFile2, "stylish")
         );
         String expectedMessage = "File extension is not supported. Supported extensions:"
                 + " .json, .yaml, .yml";
@@ -79,10 +80,9 @@ public class AppTest {
 
     @Test
     public void testEmptyFiles() {
-        Exception thrown = assertThrows(RuntimeException.class, () -> formatDiff(emptyFile1, emptyFile2, "stylish")
+        Exception thrown = assertThrows(ParsingException.class, () -> formatDiff(emptyFile1, emptyFile2, "stylish")
         );
-        String expectedMessage = "File(s) is empty. Please provide a file with"
-                + " JSON or YAML data formats";
+        String expectedMessage = "I/O Error: File not found";
         String actualMessage = thrown.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
     }

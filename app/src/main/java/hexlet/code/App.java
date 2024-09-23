@@ -5,6 +5,8 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import java.io.File;
+import java.io.IOException;
+
 import static hexlet.code.Formatter.formatDiff;
 
 
@@ -30,8 +32,14 @@ public class App implements Runnable {
     public void run() {
         try {
             System.out.println(formatDiff(filepath1, filepath2, format));
+        } catch (IOException e) {
+            System.err.println("I/O Error: " + e.getMessage());
+        } catch (ParsingException e) {
+            System.err.println("Parsing Error: " + e.getMessage());
+        } catch (UnsupportedFileExtensionException e) {
+            System.err.println("Unsupported File Extension: " + e.getMessage());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.err.println("An unexpected error occurred: " + e.getMessage());
         }
     }
 }
