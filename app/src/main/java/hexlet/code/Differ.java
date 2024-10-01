@@ -70,11 +70,11 @@ public class Differ {
         return fileName.substring(index);
     }
 
-    private static Map<String, Object> createNode(String key, ChangeType type, Object value) {
+    private static Map<String, Object> createNode(String key, ChangeType type, Object value1) {
         Map<String, Object> node = new HashMap<>();
         node.put("key", key);
         node.put("type", type);
-        node.put("value", value);
+        node.put("value1", value1);
         return node;
     }
 
